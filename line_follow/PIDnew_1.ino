@@ -1,11 +1,11 @@
 // Motor A connections
-int enL = 5;
-int in3 = 6;
-int in4 = 7;
+int enL = 10;
+int in4 = 9;
+int in3 = 8;
 // Motor B connections
-int in1 = 8;
-int in2 = 9;
-int enR = 10;
+int in2 = 7;
+int in1 = 6;
+int enR = 5;
 
 //
 int L1_read = 0;
@@ -19,13 +19,17 @@ int R4_read = 0;
 
 float sum =0;
 float val = 0.00;
+int error = 0;
 int last_error = 0;
+int P_val = 0;
+int I_val = 0;
+int D_val = 0;
 
 float kp = 1; //1
-float ki = 0.85; // 0.8
+float ki = 0.025; // 0.8
 float kd = 0.6; // 0.6
 
-int base_speed = 150;
+int base_speed = 125;
 int max_speed = 250;
 
 
@@ -72,13 +76,55 @@ void loop() {
   sum = 0*L4_read + 1*L3_read + 2*L2_read + 3*L1_read + 4*R1_read + 5*R2_read + 6*R3_read + 7*R4_read;
   val = sum*1000/(L4_read + L3_read + L2_read + L1_read + R1_read + R2_read + R3_read + R4_read );
 
-  Serial.println(val);
+  Serial.print(" value :");
+  Serial.print(val);
+  Serial.print(" , ");
 
-  int error = 3470 - val;
-  int P_val = error;
-  int I_val = I_val + error;
-  int D_val = error - last_error;
+  Serial.print( L4_read);
+  Serial.print(" ");
+  Serial.print( L3_read);
+  Serial.print(" ");
+  Serial.print( L2_read);
+  Serial.print(" ");
+  Serial.print( L1_read);
+  Serial.print(" ");
+  Serial.print( R1_read);
+  Serial.print(" ");
+  Serial.print( R2_read);
+  Serial.print(" ");
+  Serial.print( R3_read);
+  Serial.print(" ");
+  Serial.print( R4_read);
+  Serial.print(" I_val");
+  Serial.print( I_val);
+  Serial.println();
+  
+
+  if ( L4_read < 1000 && L3_read < 1000 && L2_read < 1000 && L1_read < 1000 && R1_read < 1000 && R2_read < 1000 && R3_read < 1000 && R4_read < 1000 ) {
+    if ( I_val < 0) {
+      digitalWrite(38, LOW);
+      digitalWrite(36, HIGH);
+      error = 0;      
+    }
+    else if ( I_val > 0) {
+      digitalWrite(38, HIGH);
+      digitalWrite(36, LOW);
+      error = 0;
+    }
+  }
+  else{
+    digitalWrite(38, HIGH);
+    digitalWrite(36, HIGH);
+    error = 3500 - val;
+  }
+
+//  int error = 3500 - val;
+  P_val = error;
+  I_val = I_val + error;
+  D_val = error - last_error;
   last_error = error;
+
+  
 
   int motor_speed = P_val*kp + I_val*ki + D_val*kd ;
 
