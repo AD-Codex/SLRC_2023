@@ -6,35 +6,35 @@ void D1_T2(){
   
   // line follow mwthod
   if ( int( junction) == 80) {
-    digitalWrite(led2, LOW);
-    digitalWrite(led3, LOW); 
+    digitalWrite(ledR, LOW);
+    digitalWrite(ledL, LOW); 
     IR_check();
     
     // junction checking
-    if ( (L4_read <= wLine && L3_read <= wLine) || (R4_read <= wLine && R3_read <= wLine)) {
+    if ( (L5_read <= wLine && L3_read <= wLine) || (R5_read <= wLine && R3_read <= wLine)) {
       digitalWrite(led1, HIGH);
-      move_forward(150);
+      move_forward(175);
       delay( junction_delay);
       digitalWrite(led1, LOW);
       IR_check();
       
       // Turnning checking
-      if ( L4_read <= wLine && L2_read <= wLine && R2_read <= wLine && R4_read <= wLine) {
+      if ( L5_read <= wLine && L2_read <= wLine && R2_read <= wLine && R5_read <= wLine) {
         // 2 way joint
-        digitalWrite(led2, HIGH);
-        digitalWrite(led3, HIGH);
+        digitalWrite(ledR, HIGH);
+        digitalWrite(ledL, HIGH);
         junction = 'R';
       }
-      else if ( L1_read <= wLine && R1_read <= wLine && R2_read <= wLine && R4_read <= wLine) {
+      else if ( L1_read <= wLine && R1_read <= wLine && R2_read <= wLine && R5_read <= wLine) {
         // right turn
-        digitalWrite(led2, HIGH);
-        digitalWrite(led3, LOW);
+        digitalWrite(ledR, HIGH);
+        digitalWrite(ledL, LOW);
         junction = 'R';
       }
-      else if ( R1_read <= wLine && L1_read <= wLine && L2_read <= wLine && L4_read <= wLine) {
+      else if ( R1_read <= wLine && L1_read <= wLine && L2_read <= wLine && L5_read <= wLine) {
         // left turn
-        digitalWrite(led2, LOW);
-        digitalWrite(led3, HIGH);
+        digitalWrite(ledR, LOW);
+        digitalWrite(ledL, HIGH);
         junction = 'L';
       }
       else {
@@ -44,8 +44,8 @@ void D1_T2(){
       // -------------------------------------------------------------   
     }
     else if (L1_read > wLine && R1_read > wLine) {
-      digitalWrite(led2, HIGH);
-      digitalWrite(led3, HIGH);
+      digitalWrite(ledR, HIGH);
+      digitalWrite(ledL, HIGH);
       junction = 'D';
       stop_move();
     }
@@ -56,7 +56,7 @@ void D1_T2(){
     // -----------------------------------------------------------------
   }
   else if ( int(junction) == 82) {
-    digitalWrite(led2, HIGH);
+    digitalWrite(ledR, HIGH);
     //stop_move();
     state = true;
     
@@ -64,30 +64,30 @@ void D1_T2(){
     while (state == true) {
       IR_check();
       
-      if ( L4_read > wLine &&  R4_read > wLine) {
-        digitalWrite(led2, LOW);
+      if ( L5_read > wLine &&  R5_read > wLine) {
+        digitalWrite(ledR, LOW);
         stop_move();
-        //delay(500);
+        delay(500);
         state = false;
       }
       else{
-        move_forward(150);
+        move_forward(175);
       }
     }
     
     // move forward to turning
-    move_forward( 150);
+    move_forward( 175);
     delay(350);
-    digitalWrite(led2, HIGH);
+    digitalWrite(ledR, HIGH);
     
     // turn 90 until line detect
     turn_90_line('R');
     stop_move();
-    //delay(500);
+    delay(500);
     junction = 'P';
   }
   else if ( int(junction) == 76) {
-    digitalWrite(led3, HIGH);
+    digitalWrite(ledL, HIGH);
     //stop_move();
     state = true;
     
@@ -95,21 +95,21 @@ void D1_T2(){
     while (state == true) {
       IR_check();
       
-      if ( L4_read > wLine && R4_read > wLine) {
-        digitalWrite(led3, LOW);
+      if ( L5_read > wLine && R5_read > wLine) {
+        digitalWrite(ledL, LOW);
         stop_move();
-        // delay(500);
+         delay(500);
         state = false;
       }
       else{
-        move_forward(150);
+        move_forward(165);
       }
     }
     
     // move forward to turning
-    move_forward( 150);
+    move_forward( 175);
     delay(350);
-    digitalWrite(led3, HIGH);
+    digitalWrite(ledL, HIGH);
     
     // turn 90 until line detect
     turn_90_line('L');
