@@ -4,13 +4,21 @@
 
 void PID_IR_move() {
 
-  sum = 0*L4_read + 1*L3_read + 2*L2_read + 3*L1_read + 4*R1_read + 5*R2_read + 6*R3_read + 7*R4_read;
-  val = sum*1000/(L4_read + L3_read + L2_read + L1_read + R1_read + R2_read + R3_read + R4_read );
+  Lsum = 0.0*L5_read + 0.1*L4_read + 0.2*L3_read + 0.3*L2_read + 0.4*L1_read;
+  Rsum = 0.5*R1_read + 0.6*R2_read + 0.7*R3_read + 0.8*R4_read + 0.9*R5_read;
 
-//  Serial.print(" val:");
-//  Serial.print(val);
+  float IR_val1 = Lsum +Rsum;
+
+  int IR_val2 = L5_read + L4_read + L3_read + L2_read + L1_read + R1_read + R2_read + R3_read + R4_read+ R5_read;
+
+  float IR_val = IR_val1*10000/IR_val2;
+
+  Serial.print(" value :");
+  Serial.print(IR_val);
+  Serial.print(" , ");
+
+//  Serial.print( L5_read);
 //  Serial.print(" ");
-//  
 //  Serial.print( L4_read);
 //  Serial.print(" ");
 //  Serial.print( L3_read);
@@ -26,26 +34,30 @@ void PID_IR_move() {
 //  Serial.print( R3_read);
 //  Serial.print(" ");
 //  Serial.print( R4_read);
+//  Serial.print(" ");
+//  Serial.print( R5_read);
 //  Serial.print(" I_val");
 //  Serial.print( I_val);
 //  Serial.println();
+  
+  
 
-  if ( L4_read >= wLine && L3_read >= wLine && L2_read >= wLine && L1_read >= wLine && R1_read >= wLine && R2_read >= wLine && R3_read >= wLine && R4_read >= wLine ) {
+  if ( L5_read >= wLine && L4_read >= wLine && L3_read >= wLine && L2_read >= wLine && L1_read >= wLine && R1_read >= wLine && R2_read >= wLine && R3_read >= wLine && R4_read >= wLine && R5_read >= wLine ) {
     if ( I_val < 0) {
       digitalWrite(38, LOW);
       digitalWrite(36, HIGH);
-      error = -10;      
+      error = 0;      
     }
     else if ( I_val > 0) {
       digitalWrite(38, HIGH);
       digitalWrite(36, LOW);
-      error = +10;
+      error = 0;
     }
   }
   else{
     digitalWrite(38, HIGH);
     digitalWrite(36, HIGH);
-    error = midLine_val - val;
+    error = PID_MidLine_val - IR_val;
   }
 
 //  int error = midLine_val - val;
@@ -56,8 +68,15 @@ void PID_IR_move() {
 
   int motor_speed = P_val*kp + I_val*ki + D_val*kd ;
 
-  int Rmotor_speed = base_speed - motor_speed;
-  int Lmotor_speed = base_speed + motor_speed;
+  int Rmotor_speed = Rbase_speed - motor_speed;
+  int Lmotor_speed = Lbase_speed + motor_speed;
+
+  if ( Rmotor_speed < 0 ) {
+    Rmotor_speed = 0;
+  }
+  if ( Lmotor_speed < 0) {
+    Lmotor_speed = 0;
+  }
 
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
@@ -93,4 +112,8 @@ void PID_IR_move() {
   //  digitalWrite(in2, LOW);
   //  digitalWrite(in3, HIGH);
   //  digitalWrite(in4, LOW); 
+
+  Serial.print(Rmotor_speed);
+  Serial.print(" ");
+  Serial.println(Lmotor_speed);
 }
