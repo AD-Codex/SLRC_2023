@@ -10,70 +10,153 @@ void D1_T2(){
     digitalWrite(ledL, LOW); 
     IR_check();
     
-    // junction checking
-    if ( (L5_read <= wLine && L3_read <= wLine) || (R5_read <= wLine && R3_read <= wLine)) {
-      digitalWrite(Buzzer_pin, HIGH);
-      move_forward();
-      delay( junction_delay);
-      digitalWrite(Buzzer_pin, LOW);
-      IR_check();
+//    // junction checking
+//    if ( (L4_read <= wLine && L2_read <= wLine && L1_read <= wLine && R1_read <= wLine) || (R4_read <= wLine && R2_read <= wLine && R1_read <= wLine && L1_read <= wLine)) {
+//      digitalWrite(Buzzer_pin, HIGH);
+//      move_forward();
+//      delay( junction_delay);
+//      digitalWrite(Buzzer_pin, LOW);
+//      IR_check();
+//
+//      Serial.print(L5_read);
+//      Serial.print(" ");
+//      Serial.println(R5_read);
       
       // Turnning checking
-      if ( L7_read <= wLine && L2_read <= wLine && R2_read <= wLine && R7_read <= wLine) {
-        // 2 way joint
+//      if (L5_read <= wLine && L4_read <= wLine && L2_read <= wLine && R2_read <= wLine && R4_read <= wLine && R5_read <= wLine) {
+//        // 2 way joint
+//        stop_move();
+//        delay(500);
+//        
+//        digitalWrite(ledR, HIGH);
+//        digitalWrite(ledL, HIGH);
+//
+//        digitalWrite(Buzzer_pin, HIGH);
+//        delay( 50);
+//        digitalWrite(Buzzer_pin, LOW);
+//        delay( 50);
+//        digitalWrite(Buzzer_pin, HIGH);
+//        delay( 50);
+//        digitalWrite(Buzzer_pin, LOW);
+//        
+//        junction = 'R';
+//        
+//      }
+      if ( R1_read <= wLine && R5_read <= wLine) {
         stop_move();
-        delay(500);
-        
-        digitalWrite(ledR, HIGH);
-        digitalWrite(ledL, HIGH);
-
         digitalWrite(Buzzer_pin, HIGH);
-        delay( 50);
-        digitalWrite(Buzzer_pin, LOW);
-        delay( 50);
-        digitalWrite(Buzzer_pin, HIGH);
-        delay( 50);
-        digitalWrite(Buzzer_pin, LOW);
-        
-        junction = 'R';
-        
-      }
-      else if ( L1_read <= wLine && R1_read <= wLine && R2_read <= wLine && R7_read <= wLine) {
-        // right turn
+        move_forward();
+        delay( junction_delay);
         stop_move();
-        delay(500);
-        
-        digitalWrite(ledR, HIGH);
-        digitalWrite(ledL, LOW);
-
-        digitalWrite(Buzzer_pin, HIGH);
-        delay( 50);
         digitalWrite(Buzzer_pin, LOW);
-        
-        junction = 'R';
+        IR_check();
+
+        if ( R1_read <= wLine && L1_read <= wLine && L2_read <= wLine && L4_read <= wLine && L5_read <= wLine ) {
+          stop_move();
+          delay(500);
+          
+          digitalWrite(ledR, HIGH);
+          digitalWrite(ledL, HIGH);
+  
+          digitalWrite(Buzzer_pin, HIGH);
+          delay( 50);
+          digitalWrite(Buzzer_pin, LOW);
+          delay( 50);
+          digitalWrite(Buzzer_pin, HIGH);
+          delay( 50);
+          digitalWrite(Buzzer_pin, LOW);
+          
+          junction = 'R';
+        }
+        else {
+          // right turn
+          stop_move();
+          delay(500);
+          
+          digitalWrite(ledR, HIGH);
+          digitalWrite(ledL, LOW);
+  
+          digitalWrite(Buzzer_pin, HIGH);
+          delay( 50);
+          digitalWrite(Buzzer_pin, LOW);
+          
+          junction = 'R';
+        }
+      
+//        // right turn
+//        stop_move();
+//        delay(500);
+//        
+//        digitalWrite(ledR, HIGH);
+//        digitalWrite(ledL, LOW);
+//
+//        digitalWrite(Buzzer_pin, HIGH);
+//        delay( 50);
+//        digitalWrite(Buzzer_pin, LOW);
+//        
+//        junction = 'R';
         
       }
-      else if ( R1_read <= wLine && L1_read <= wLine && L2_read <= wLine && L7_read <= wLine) {
-        // left turn
-        stop_move();
-        delay(500);
-
-        digitalWrite(ledR, LOW);
-        digitalWrite(ledL, HIGH);
-
+      else if ( L1_read <= wLine && L5_read <= wLine) {
+        
         digitalWrite(Buzzer_pin, HIGH);
-        delay( 50);
+        move_forward();
+        delay( junction_delay);
         digitalWrite(Buzzer_pin, LOW);
-        
-        junction = 'L';
-      }
-      else {
-        // error
-        digitalWrite(led99, HIGH);
-      }
+        IR_check();
+
+        if ( L1_read <= wLine && R1_read <= wLine && R2_read <= wLine && R4_read <= wLine && R5_read <= wLine ) {
+          stop_move();
+          delay(500);
+          
+          digitalWrite(ledR, HIGH);
+          digitalWrite(ledL, HIGH);
+  
+          digitalWrite(Buzzer_pin, HIGH);
+          delay( 50);
+          digitalWrite(Buzzer_pin, LOW);
+          delay( 50);
+          digitalWrite(Buzzer_pin, HIGH);
+          delay( 50);
+          digitalWrite(Buzzer_pin, LOW);
+          
+          junction = 'R';
+        }
+        else {
+          // left turn
+          stop_move();
+          delay(500);
+  
+          digitalWrite(ledR, LOW);
+          digitalWrite(ledL, HIGH);
+  
+          digitalWrite(Buzzer_pin, HIGH);
+          delay( 50);
+          digitalWrite(Buzzer_pin, LOW);
+          
+          junction = 'L';
+        }
+//        // left turn
+//        stop_move();
+//        delay(500);
+//
+//        digitalWrite(ledR, LOW);
+//        digitalWrite(ledL, HIGH);
+//
+//        digitalWrite(Buzzer_pin, HIGH);
+//        delay( 50);
+//        digitalWrite(Buzzer_pin, LOW);
+//        
+//        junction = 'L';
+
+//      }
+//      else {
+//        // error
+//        digitalWrite(led99, HIGH);
+//      }
       // -------------------------------------------------------------   
     }
-    else if (L7_read > wLine && L3_read > wLine && L1_read > wLine && R1_read > wLine && R3_read > wLine && R7_read > wLine) {
+    else if (L4_read > wLine && L3_read > wLine && L1_read > wLine && R1_read > wLine && R3_read > wLine && R4_read > wLine) {
       stop_move();
       
       digitalWrite(ledR, HIGH);
@@ -97,7 +180,7 @@ void D1_T2(){
     while (state == true) {
       IR_check();
       
-      if ( L5_read > wLine &&  R5_read > wLine) {
+      if ( L5_read > wLine && L4_read > wLine && R4_read > wLine && R5_read > wLine) {
         digitalWrite(ledR, LOW);
         stop_move();
         delay(500);
@@ -107,10 +190,13 @@ void D1_T2(){
         move_forward();
       }
     }
+
+    stop_move();
+//    delay(200000);
     
     // move forward to turning
     move_forward();
-    delay(500);
+    delay(700);     // 650 -----------------------------------------------------------------------------
     digitalWrite(ledR, HIGH);
 
     stop_move();
@@ -136,7 +222,7 @@ void D1_T2(){
     while (state == true) {
       IR_check();
       
-      if (  L8_read > wLine && L7_read > wLine && R7_read > wLine && R8_read > wLine) {
+      if (  L5_read > wLine && L4_read > wLine && R4_read > wLine && R5_read > wLine) {
         digitalWrite(ledL, LOW);
         stop_move();
         delay(500);
@@ -149,7 +235,7 @@ void D1_T2(){
     
     // move forward to turning
     move_forward();
-    delay(500);
+    delay(700);    // 700 -------------------------------------------------------------
     
     digitalWrite(ledL, HIGH);
 
@@ -166,6 +252,9 @@ void D1_T2(){
     delay(500);
   }
   else if ( int(junction) == 68) {
+    stop_move();
+    delay(500);
+    
     turn_180_line();
     digitalWrite(Buzzer_pin, LOW);
     junction = 'P';
